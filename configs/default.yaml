@@ -1,0 +1,80 @@
+project_name: PathoVision
+seed: 42
+
+paths:
+  data_root: data/raw
+  metadata_csv: data/metadata/metadata.csv
+  splits_dir: data/splits
+  results_dir: results
+  checkpoint_dir: checkpoints
+
+dataset:
+  root: data/raw
+  tile_size: 224
+  stride: 168
+  tissue_threshold: 0.20
+  background_gray_threshold: 245
+  min_tile_size: 32
+  max_train_images: null
+  max_val_images: null
+  max_test_images: null
+
+split:
+  test_size: 0.20
+  val_size: 0.15
+  random_state: 42
+
+augmentation:
+  horizontal_flip: true
+  vertical_flip: true
+  rotation_degrees: 20
+  color_jitter_brightness: 0.15
+  color_jitter_contrast: 0.15
+  color_jitter_saturation: 0.15
+  color_jitter_hue: 0.03
+  resize_size: 224
+
+model:
+  architecture: resnet18
+  pretrained: true
+  freeze_backbone: true
+  dropout: 0.30
+
+training:
+  mode: full
+  batch_size: 32
+  num_workers: 2
+  epochs_phase1: 2
+  epochs_phase2: 8
+  learning_rate: 0.001
+  backbone_learning_rate: 0.0001
+  weight_decay: 0.0001
+  early_stopping_patience: 3
+  scheduler_factor: 0.5
+  scheduler_patience: 1
+  min_lr: 0.0000001
+  use_amp: true
+  max_train_tiles_per_image: null
+  max_eval_tiles_per_image: null
+
+loss:
+  use_pos_weight: true
+
+evaluation:
+  threshold: 0.5
+  tune_threshold_on_validation: false
+  aggregation: top_k
+  top_k_fraction: 0.20
+  save_tile_predictions: true
+
+reproducibility:
+  deterministic: true
+
+fast:
+  max_train_images: 250
+  max_val_images: 80
+  max_test_images: 80
+  epochs_phase1: 1
+  epochs_phase2: 2
+  max_train_tiles_per_image: 8
+  max_eval_tiles_per_image: 12
